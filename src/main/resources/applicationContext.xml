@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:reg="http://www.dangdang.com/schema/ddframe/reg" xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/context 
+                        http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd
+                        "
+	default-autowire="byType" default-init-method="init">
+	<context:component-scan base-package="com.demo.job" />
+
+	<!--配置作业注册中心 -->
+	<reg:zookeeper id="regCenter" server-lists="10.0.61.151:2181"
+		namespace="demo_job" base-sleep-time-milliseconds="1000"
+		max-sleep-time-milliseconds="3000" max-retries="3" />
+
+	<!-- 配置简单作业 -->
+
+	<job:simple id="javaSimpleJob" class="com.demo.job.JavaSimpleJob"
+		registry-center-ref="regCenter" cron="0/3 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+
+	<!-- <job:simple id="springSimpleJob" class="com.demo.job.SpringSimpleJob" 
+		registry-center-ref="regCenter" cron="0/3 * * * * ?" sharding-total-count="3" 
+		sharding-item-parameters="0=A,1=B,2=C" /> -->
+
+	<!-- 配置数据流作业 -->
+	<!-- <job:dataflow id="javaDataflow" class="com.demo.job.JavaDataflow" registry-center-ref="regCenter" 
+		cron="0/10 * * * * ?" sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" 
+		/> -->
+	<!-- <job:dataflow id="springDataflow" class="com.demo.job.SpringDataflow" 
+		registry-center-ref="regCenter" cron="0/10 * * * * ?" sharding-total-count="3" 
+		sharding-item-parameters="0=A,1=B,2=C" /> -->
+</beans>
