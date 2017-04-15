@@ -9,23 +9,10 @@
 	<name>demo_job</name>
 	<url>http://maven.apache.org</url>
 
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Internal Releases</name>
-			<url>http://10.0.60.169:8081/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://10.0.60.169:8081/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<properties>
 		<spring.version>4.3.7.RELEASE</spring.version>
 		<elasticjob.version>2.1.0</elasticjob.version>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<java.encoding>UTF-8</java.encoding>
 	</properties>
 
