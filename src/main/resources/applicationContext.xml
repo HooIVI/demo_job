@@ -4,9 +4,9 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:reg="http://www.dangdang.com/schema/ddframe/reg" xmlns:job="http://www.dangdang.com/schema/ddframe/job"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context 
-                        http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+                        http://www.springframework.org/schema/context/spring-context.xsd
                         http://www.dangdang.com/schema/ddframe/reg
                         http://www.dangdang.com/schema/ddframe/reg/reg.xsd
                         http://www.dangdang.com/schema/ddframe/job
@@ -14,25 +14,18 @@
                         "
        default-autowire="byType" default-init-method="init">
     <context:component-scan base-package="com.demo.job"/>
-    <context:property-placeholder location="classpath:conf/*.properties"/>
 
     <!--配置作业注册中心 -->
-    <reg:zookeeper id="regCenter" server-lists="${serverLists}" namespace="${namespace}"
-                   base-sleep-time-milliseconds="${baseSleepTimeMilliseconds}"
-                   max-sleep-time-milliseconds="${maxSleepTimeMilliseconds}" max-retries="${maxRetries}"/>
+    <reg:zookeeper id="regCenter" server-lists="192.168.1.4:2128" namespace="demo_job"
+                   base-sleep-time-milliseconds="1000"
+                   max-sleep-time-milliseconds="3000" max-retries="3"/>
 
-    <job:simple id="${simple.id}" class="${simple.class}" registry-center-ref="regCenter"
-                sharding-total-count="${simple.shardingTotalCount}" cron="${simple.cron}"
-                sharding-item-parameters="${simple.shardingItemParameters}"
-                monitor-execution="${simple.monitorExecution}" monitor-port="${simple.monitorPort}"
-                failover="${simple.failover}" description="${simple.description}" disabled="${simple.disabled}"
-                overwrite="${simple.overwrite}" event-trace-rdb-data-source="elasticJobLog"/>
-    <job:dataflow id="${dataflow.id}" class="${dataflow.class}" registry-center-ref="regCenter"
-                  sharding-total-count="${dataflow.shardingTotalCount}" cron="${dataflow.cron}"
-                  sharding-item-parameters="${dataflow.shardingItemParameters}"
-                  monitor-execution="${dataflow.monitorExecution}" failover="${dataflow.failover}"
-                  max-time-diff-seconds="${dataflow.maxTimeDiffSeconds}"
-                  streaming-process="${dataflow.streamingProcess}" description="${dataflow.description}"
-                  disabled="${dataflow.disabled}" overwrite="${dataflow.overwrite}"/>
-
+    <job:simple id="springSimpleJob" class="com.demo.job.SpringSimpleJob" registry-center-ref="regCenter"
+                sharding-total-count="3" cron="0/5 * * * * ?"
+                sharding-item-parameters="0=Beijing,1=Shanghai,2=Guangzhou" monitor-execution="true"
+                failover="true" overwrite="true"/>
+    <job:dataflow id="springDataflowJob" class="com.demo.job.SpringDataflowJob" registry-center-ref="regCenter"
+                  sharding-total-count="3" cron="0/5 * * * * ?"
+                  sharding-item-parameters="0=Beijing,1=Shanghai,2=Guangzhou"
+                  monitor-execution="true" failover="true" overwrite="true"/>
 </beans>
